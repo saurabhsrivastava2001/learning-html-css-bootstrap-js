@@ -1,5 +1,5 @@
 git add .
-git commit -m" message"
+git commit -m"added new tags"
 git branch -M main
 git push origin main
 
