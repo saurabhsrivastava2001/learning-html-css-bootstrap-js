@@ -1,0 +1,41 @@
+/* the * will be applied on the whole tags of the page */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+section{
+    width: 100%;
+    /* margin:0 20px ; */
+}
+nav{
+    display: flex;/*the all nav elements will be in horizontal(axis=1) rather than the default verticle(axis=1)*/
+    padding: 0 20px;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    background-color: cadetblue;
+}
+ol{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+li{
+    padding: 20px ;
+    list-style: none;
+
+}
+
+ol li a {
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: red;
+
+}
+img{
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
