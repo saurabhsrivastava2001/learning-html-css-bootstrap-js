@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Browser</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="https://www.google.com/imghp?hl=en&tab=ri&authuser=0&ogbl" class="nav-link">Web</a>
+                <a href="https://en.wikipedia.org/wiki/Gennady_Korotkevich" class="nav-link">Images</a>
+                <a href="https://www.youtube.com/" class="nav-link">Videos</a>
+                <a href="https://news.google.com/home?hl=en-IN&gl=IN&ceid=IN:en" class="nav-link">News</a>
+            </div>
+            <div class="nav-right">
+                <div class="theme-toggle">
+                    <input type="checkbox" id="theme-switch">
+                    <label for="theme-switch" class="theme-label">
+                        <span class="theme-icon">☀️</span>
+                        <span class="theme-icon">🌙</span>
+                    </label>
+                </div>
+                <a href="https://support.google.com/accounts/answer/3118621?hl=en" class="nav-link">Settings</a>
+                <button  class="sign-in-btn">
+                    <a href="https://accounts.google.com/servicelogin?hl=en-gb"> Sign in</a>
+                   </button>
+            </div>
+            
+        
+        </nav>
+    </header>
+
+    <main>
+        <div class="logo">
+            <span class="logo-text">Googlie</span>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search the web" autocomplete="off">
+                <button onclick="searchGoogle()" class="search-icon">🔍</button>
+            </div>
+            <div class="search-suggestions" id="suggestions">
+                <!-- Suggestions will appear here -->
+            </div>
+            <div class="search-buttons">
+                <button onclick="searchGoogle()" class="search-btn">Search Web</button>
+                <button class="lucky-btn"><a style ="color : white ; text-decoration: none;" href="https://www.google.com/search?q=doodle+google&oq=doodle+google&gs_lcrp=EgZjaHJvbWUyDggAEEUYORhDGIAEGIoFMgoIARAAGIAEGMcFMgoIAhAAGIAEGMcFMgoIAxAAGIAEGMcFMgoIBBAuGIAEGMcFMgoIBRAAGIAEGMcFMgoIBhAAGIAEGMcFMgoIBxAAGIAEGMcFMgoICBAAGIAEGMcFMgoICRAAGIAEGMcF0gEJNjA4OGowajE1qAIIsAIB8QUEHk2q-Ine4w&sourceid=chrome&ie=UTF-8">I'm Feeling Lucky</a></button>
+            </div>
+            <div class="container">
+        
+                <!-- Unique Toggle Switch -->
+                <div class="incognito-toggle-container">
+                    <label class="incognito-toggle-label">Incognito Mode</label>
+                    <label class="incognito-toggle-switch">
+                        <input type="checkbox" id="incognitoModeToggle">
+                        <span class="incognito-slider"></span>
+                    </label>
+                </div>
+        
+                <!-- Incognito Icon -->
+                <img class="incognito-icon" id="incognito-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Incognito_mode_icon_%28GChrome%29.svg/2048px-Incognito_mode_icon_%28GChrome%29.svg.png" alt="Incognito Icon">
+        
+            </div>
+        </div>
+
+        <div class="quick-access">
+            <h3>Quick Access</h3>
+            <div class="tiles">
+                <a href="https://news.google.com/home?hl=en-IN&gl=IN&ceid=IN:en" class="tile">
+                    <span class="tile-icon">📰</span>
+                    <span class="tile-text">News</span>
+                </a>
+                <a href="https://mail.google.com/mail/?authuser=0" class="tile">
+                    <span class="tile-icon">📧</span>
+                    <span class="tile-text">Mail</span>
+                </a>
+                <a href="https://github.com/saurabhsrivastava2001" class="tile">
+                    <span class="tile-icon">🧑‍💻</span>
+                    <span class="tile-text">Github</span>
+                </a>
+                <a href="https://www.linkedin.com/in/saurabh-kumar-srivastava-20a655259/" class="tile">
+                    <span class="tile-icon">😎</span>
+                    <span class="tile-text">linkedin</span>
+                </a>
+                <a href="https://leetcode.com/saurabh_sri-_2001/" class="tile">
+                    <span class="tile-icon">🤖</span>
+                    <span class="tile-text">LeetCode</span>
+                </a>
+                <a href="https://chat.openai.com/" class="tile">
+                    <span class="tile-icon">🙏</span>
+                    <span class="tile-text">ChatGpt</span>
+                </a>
+                <a href="https://www.youtube.com/?authuser=0" class="tile">
+                    <span class="tile-icon">🎥</span>
+                    <span class="tile-text">Videos</span>
+                </a>
+                <a href="https://maps.google.com/?authuser=0" class="tile">
+                    <span class="tile-icon">🗺️</span>
+                    <span class="tile-text">Maps</span>
+                </a>
+                <a href="#" class="tile add-tile">
+                    <span class="tile-icon">+</span>
+                    <span class="tile-text">Add</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="widgets">
+            <div class="weather-widget">
+                <div class="weather-icon">⛅</div>
+                <div class="weather-info">
+                    <span class="temperature">19°C</span>
+                    <span class="location">Phagwara,Punjab India</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-left">
+            <a href="https://www.linkedin.com/in/saurabh-kumar-srivastava-20a655259/" class="footer-link">About</a>
+            <a href="https://github.com/saurabhsrivastava2001" class="footer-link">Advertising</a>
+        </div>
+        <div class="footer-right">
+            <a href="#" class="footer-link">Privacy</a>
+            <a href="#" class="footer-link">Terms</a>
+            <a href="#" class="footer-link">Settings</a>
+        </div>
+    </footer>
+    <script>
+        const themeSwitch = document.getElementById('theme-switch');
+        
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeSwitch.checked = true;
+        }
+
+        // Theme toggle functionality
+        themeSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+
+            }
+            
+        });
+        function searchGoogle() {
+            var query = document.getElementById("search-input").value;
+            if (query) {
+                window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
+            }
+        }
+        document.getElementById("incognitoModeToggle").addEventListener("change", function() {
+            let body = document.body;
+            let heading = document.querySelector("h1");
+            let img = document.getElementById("incognito-icon");
+
+            if (this.checked) {
+                body.classList.add("incognito-active");
+                heading.innerText = "Incognito Mode";
+                img.style.display = "block";
+            } else {
+                body.classList.remove("incognito-active");
+                heading.innerText = "Normal Mode";
+                img.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>

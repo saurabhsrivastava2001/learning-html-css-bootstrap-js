@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Beautiful Clock with Features</title>
+    <style>
+        :root {
+            --bg-color: #f0f0f0;
+            --text-color: #333;
+            --accent-color: #4a90e2;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --clock-face-color: #fff;
+            --clock-border-color: #d4d4d4;
+        }
+
+        .dark-mode {
+            --bg-color: #222;
+            --text-color: #f0f0f0;
+            --accent-color: #64b5f6;
+            --shadow-color: rgba(255, 255, 255, 0.1);
+            --clock-face-color: #2c2c2c;
+            --clock-border-color: #444;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z" fill="%23000000" fill-opacity="0.05" fill-rule="evenodd"/%3E%3C/svg%3E');
+        }
+
+        .clock-container {
+            background-color: var(--bg-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+        }
+
+        .clock {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background-color: var(--clock-face-color);
+            border: 15px solid var(--clock-border-color);
+            box-shadow: 0 0 30px var(--shadow-color),
+                        inset 0 0 30px var(--shadow-color);
+            position: relative;
+            margin: 0 auto 20px;
+        }
+
+        .clock-face {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: 50% 100%;
+            border-radius: 5px;
+            z-index: 10;
+        }
+
+        .hour-hand {
+            width: 8px;
+            height: 30%;
+            background-color: var(--text-color);
+        }
+
+        .minute-hand {
+            width: 6px;
+            height: 40%;
+            background-color: var(--text-color);
+        }
+
+        .second-hand {
+            width: 2px;
+            height: 45%;
+            background-color: var(--accent-color);
+        }
+
+        .clock-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            transform: translate(-50%, -50%);
+            z-index: 11;
+        }
+
+        .hour-marks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hour-marks span {
+            position: absolute;
+            width: 2px;
+            height: 10px;
+            background-color: var(--text-color);
+            transform-origin: 50% 150px;
+        }
+
+        .digital-clock {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--text-color);
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            text-align: center;
+            background-color: var(--bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .feature-display {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        input[type="time"] {
+            font-size: 18px;
+            padding: 5px;
+            margin-bottom: 10px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+        }
+
+        .music-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        #volume-slider {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="clock">
+            <div class="clock-face">
+                <div class="hand hour-hand"></div>
+                <div class="hand minute-hand"></div>
+                <div class="hand second-hand"></div>
+                <div class="clock-center"></div>
+                <div class="hour-marks">
+                    <span style="transform: rotate(0deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(30deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(60deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(90deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(120deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(150deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(180deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(210deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(240deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(270deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(300deg) translateY(-145px)"></span>
+                    <span style="transform: rotate(330deg) translateY(-145px)"></span>
+                </div>
+            </div>
+        </div>
+        <div class="digital-clock"></div>
+        <div class="controls">
+            <button id="mode-toggle">Switch to Digital</button>
+            <button id="theme-toggle">Dark Mode</button>
+        </div>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-display" id="alarm-display">00:00:00</div>
+                <input type="time" id="alarm-input" step="1">
+                <button id="set-alarm">Set Alarm</button>
+            </div>
+            <div class="feature">
+                <div class="feature-display" id="stopwatch-display">00:00:00</div>
+                <button id="stopwatch-toggle">Start Stopwatch</button>
+            </div>
+            <div class="feature">
+                <div class="feature-display" id="timer-display">00:00:00</div>
+                <input type="time" id="timer-input" step="1">
+                <button id="set-timer">Set Timer</button>
+            </div>
+        </div>
+        <div class="music-controls">
+            <button id="music-toggle">Play Music</button>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+        </div>
+    </div>
+
+    <audio id="background-music" loop>
+        <source src="https://example.com/path/to/your/soothing-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const clock = document.querySelector('.clock');
+        const digitalClock = document.querySelector('.digital-clock');
+        const hourHand = document.querySelector('.hour-hand');
+        const minuteHand = document.querySelector('.minute-hand');
+        const secondHand = document.querySelector('.second-hand');
+        const modeToggle = document.getElementById('mode-toggle');
+        const themeToggle = document.getElementById('theme-toggle');
+        const alarmDisplay = document.getElementById('alarm-display');
+        const alarmInput = document.getElementById('alarm-input');
+        const setAlarmBtn = document.getElementById('set-alarm');
+        const stopwatchDisplay = document.getElementById('stopwatch-display');
+        const stopwatchToggle = document.getElementById('stopwatch-toggle');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerInput = document.getElementById('timer-input');
+        const setTimerBtn = document.getElementById('set-timer');
+        const musicToggle = document.getElementById('music-toggle');
+        const volumeSlider = document.getElementById('volume-slider');
+        const backgroundMusic = document.getElementById('background-music');
+
+        let isAnalog = true;
+        let isDarkMode = false;
+        let alarmTime = null;
+        let stopwatchInterval = null;
+        let stopwatchTime = 0;
+        let timerInterval = null;
+        let timerTime = 0;
+
+        function setIndianTime() {
+            const now = new Date();
+            const indiaTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+            return indiaTime;
+        }
+
+        function updateClock() {
+            const now = setIndianTime();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            if (isAnalog) {
+                const hourDegrees = (hours % 12 + minutes / 60) * 30;
+                const minuteDegrees = (minutes + seconds / 60) * 6;
+                const secondDegrees = seconds * 6;
+
+                hourHand.style.transform = `translateX(-50%) rotate(${hourDegrees}deg)`;
+                minuteHand.style.transform = `translateX(-50%) rotate(${minuteDegrees}deg)`;
+                secondHand.style.transform = `translateX(-50%) rotate(${secondDegrees}deg)`;
+                clock.style.display = 'block';
+                digitalClock.style.display = 'none';
+            } else {
+                const timeString = now.toLocaleTimeString('en-US', { hour12: false, timeZone: 'Asia/Kolkata' });
+                digitalClock.textContent = timeString;
+                clock.style.display = 'none';
+                digitalClock.style.display = 'block';
+            }
+
+            checkAlarm(now);
+        }
+
+        function toggleMode() {
+            isAnalog = !isAnalog;
+            modeToggle.textContent = isAnalog ? 'Switch to Digital' : 'Switch to Analog';
+            updateClock();
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            themeToggle.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+        }
+
+        function setAlarm() {
+            const time = alarmInput.value;
+            if (time) {
+                const [hours, minutes, seconds] = time.split(':').map(Number);
+                const now = setIndianTime();
+                alarmTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, seconds);
+                if (alarmTime < now) {
+                    alarmTime.setDate(alarmTime.getDate() + 1);
+                }
+                alarmDisplay.textContent = alarmTime.toLocaleTimeString('en-US', { hour12: false });
+            }
+        }
+
+        function checkAlarm(now) {
+            if (alarmTime && now >= alarmTime) {
+                alert('Alarm!');
+                alarmTime = null;
+                alarmDisplay.textContent = '00:00:00';
+                alarmInput.value = '';
+            }
+        }
+
+        function toggleStopwatch() {
+            if (stopwatchInterval) {
+                clearInterval(stopwatchInterval);
+                stopwatchInterval = null;
+                stopwatchToggle.textContent = 'Start Stopwatch';
+            } else {
+                stopwatchInterval = setInterval(updateStopwatch, 1000);
+                stopwatchToggle.textContent = 'Stop Stopwatch';
+            }
+        }
+
+        function updateStopwatch() {
+            stopwatchTime++;
+            stopwatchDisplay.textContent = formatTime(stopwatchTime);
+        }
+
+        function setTimer() {
+            const time = timerInput.value;
+            if (time) {
+                const [hours, minutes, seconds] = time.split(':').map(Number);
+                timerTime = hours * 3600 + minutes * 60 + seconds;
+                updateTimerDisplay();
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(updateTimer, 1000);
+                setTimerBtn.textContent = 'Cancel Timer';
+            }
+        }
+
+        function updateTimer() {
+            if (timerTime > 0) {
+                timerTime--;
+                updateTimerDisplay();
+            } else {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                alert('Timer finished!');
+                setTimerBtn.textContent = 'Set Timer';
+                timerInput.value = '';
+            }
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(timerTime);
+        }
+
+        function formatTime(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function toggleMusic() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                musicToggle.textContent = 'Pause Music';
+            } else {
+                backgroundMusic.pause();
+                musicToggle.textContent = 'Play Music';
+            }
+        }
+
+        function updateVolume() {
+            backgroundMusic.volume = volumeSlider.value;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        modeToggle.addEventListener('click', toggleMode);
+        themeToggle.addEventListener('click', toggleTheme);
+        setAlarmBtn.addEventListener('click', setAlarm);
+        stopwatchToggle.addEventListener('click', toggleStopwatch);
+        setTimerBtn.addEventListener('click', setTimer);
+        musicToggle.addEventListener('click', toggleMusic);
+        volumeSlider.addEventListener('input', updateVolume);
+    </script>
+</body>
+</html>

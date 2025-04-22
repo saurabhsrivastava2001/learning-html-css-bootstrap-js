@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Clock with Features</title>
+    <style>
+        :root {
+            --bg-color: #f0f0f0;
+            --text-color: #333;
+            --accent-color: #4a90e2;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode {
+            --bg-color: #222;
+            --text-color: #f0f0f0;
+            --accent-color: #64b5f6;
+            --shadow-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .clock-container {
+            text-align: center;
+        }
+
+        .clock {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            border: 10px solid var(--accent-color);
+            box-shadow: 0 0 30px var(--shadow-color);
+            position: relative;
+            margin: 0 auto 20px;
+        }
+
+        .clock-face {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: 50% 100%;
+            border-radius: 5px;
+        }
+
+        .hour-hand {
+            width: 8px;
+            height: 30%;
+            background-color: var(--text-color);
+        }
+
+        .minute-hand {
+            width: 6px;
+            height: 40%;
+            background-color: var(--text-color);
+        }
+
+        .second-hand {
+            width: 2px;
+            height: 45%;
+            background-color: var(--accent-color);
+        }
+
+        .digital-clock {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--text-color);
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+        .feature-display {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="clock">
+            <div class="clock-face">
+                <div class="hand hour-hand"></div>
+                <div class="hand minute-hand"></div>
+                <div class="hand second-hand"></div>
+            </div>
+        </div>
+        <div class="digital-clock"></div>
+        <div class="controls">
+            <button id="mode-toggle">Switch to Digital</button>
+            <button id="theme-toggle">Dark Mode</button>
+        </div>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-display" id="alarm-display">00:00:00</div>
+                <button id="set-alarm">Set Alarm</button>
+            </div>
+            <div class="feature">
+                <div class="feature-display" id="stopwatch-display">00:00:00</div>
+                <button id="stopwatch-toggle">Start Stopwatch</button>
+            </div>
+            <div class="feature">
+                <div class="feature-display" id="timer-display">00:00:00</div>
+                <button id="set-timer">Set Timer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const clock = document.querySelector('.clock');
+        const digitalClock = document.querySelector('.digital-clock');
+        const hourHand = document.querySelector('.hour-hand');
+        const minuteHand = document.querySelector('.minute-hand');
+        const secondHand = document.querySelector('.second-hand');
+        const modeToggle = document.getElementById('mode-toggle');
+        const themeToggle = document.getElementById('theme-toggle');
+        const alarmDisplay = document.getElementById('alarm-display');
+        const setAlarmBtn = document.getElementById('set-alarm');
+        const stopwatchDisplay = document.getElementById('stopwatch-display');
+        const stopwatchToggle = document.getElementById('stopwatch-toggle');
+        const timerDisplay = document.getElementById('timer-display');
+        const setTimerBtn = document.getElementById('set-timer');
+
+        let isAnalog = true;
+        let isDarkMode = false;
+        let alarmTime = null;
+        let stopwatchInterval = null;
+        let stopwatchTime = 0;
+        let timerInterval = null;
+        let timerTime = 0;
+
+        function setIndianTime() {
+            const now = new Date();
+            const indiaTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+            return indiaTime;
+        }
+
+        function updateClock() {
+            const now = setIndianTime();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            if (isAnalog) {
+                const hourDegrees = (hours % 12 + minutes / 60) * 30;
+                const minuteDegrees = (minutes + seconds / 60) * 6;
+                const secondDegrees = seconds * 6;
+
+                hourHand.style.transform = `translateX(-50%) rotate(${hourDegrees}deg)`;
+                minuteHand.style.transform = `translateX(-50%) rotate(${minuteDegrees}deg)`;
+                secondHand.style.transform = `translateX(-50%) rotate(${secondDegrees}deg)`;
+                clock.style.display = 'block';
+                digitalClock.style.display = 'none';
+            } else {
+                const timeString = now.toLocaleTimeString('en-US', { hour12: false, timeZone: 'Asia/Kolkata' });
+                digitalClock.textContent = timeString;
+                clock.style.display = 'none';
+                digitalClock.style.display = 'block';
+            }
+
+            checkAlarm(now);
+        }
+
+        function toggleMode() {
+            isAnalog = !isAnalog;
+            modeToggle.textContent = isAnalog ? 'Switch to Digital' : 'Switch to Analog';
+            updateClock();
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            themeToggle.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+        }
+
+        function setAlarm() {
+            const time = prompt('Enter alarm time (HH:MM:SS):');
+            if (time) {
+                const [hours, minutes, seconds] = time.split(':').map(Number);
+                const now = setIndianTime();
+                alarmTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, seconds);
+                if (alarmTime < now) {
+                    alarmTime.setDate(alarmTime.getDate() + 1);
+                }
+                alarmDisplay.textContent = alarmTime.toLocaleTimeString('en-US', { hour12: false });
+            }
+        }
+
+        function checkAlarm(now) {
+            if (alarmTime && now >= alarmTime) {
+                alert('Alarm!');
+                alarmTime = null;
+                alarmDisplay.textContent = '00:00:00';
+            }
+        }
+
+        function toggleStopwatch() {
+            if (stopwatchInterval) {
+                clearInterval(stopwatchInterval);
+                stopwatchInterval = null;
+                stopwatchToggle.textContent = 'Start Stopwatch';
+            } else {
+                stopwatchInterval = setInterval(updateStopwatch, 1000);
+                stopwatchToggle.textContent = 'Stop Stopwatch';
+            }
+        }
+
+        function updateStopwatch() {
+            stopwatchTime++;
+            stopwatchDisplay.textContent = formatTime(stopwatchTime);
+        }
+
+        function setTimer() {
+            const time = prompt('Enter timer duration (HH:MM:SS):');
+            if (time) {
+                const [hours, minutes, seconds] = time.split(':').map(Number);
+                timerTime = hours * 3600 + minutes * 60 + seconds;
+                updateTimerDisplay();
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(updateTimer, 1000);
+                setTimerBtn.textContent = 'Cancel Timer';
+            }
+        }
+
+        function updateTimer() {
+            if (timerTime > 0) {
+                timerTime--;
+                updateTimerDisplay();
+            } else {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                alert('Timer finished!');
+                setTimerBtn.textContent = 'Set Timer';
+            }
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(timerTime);
+        }
+
+        function formatTime(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        modeToggle.addEventListener('click', toggleMode);
+        themeToggle.addEventListener('click', toggleTheme);
+        setAlarmBtn.addEventListener('click', setAlarm);
+        stopwatchToggle.addEventListener('click', toggleStopwatch);
+        setTimerBtn.addEventListener('click', setTimer);
+    </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Clock with Alarm & Timer</title>
+    <style>
+        :root {
+            --bg-color: #f0f0f0;
+            --text-color: #333;
+            --primary-color: #4a90e2;
+            --clock-face: #fff;
+            --border-color: #d4d4d4;
+        }
+
+        .dark-mode {
+            --bg-color: #222;
+            --text-color: #f0f0f0;
+            --primary-color: #64b5f6;
+            --clock-face: #2c2c2c;
+            --border-color: #444;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.3s;
+        }
+
+        .container {
+            width: 400px;
+            text-align: center;
+            background: var(--clock-face);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .clock {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .analog-clock {
+            display: none;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid var(--primary-color);
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: 50% 100%;
+            background: var(--text-color);
+        }
+
+        .hour-hand { width: 6px; height: 35%; }
+        .minute-hand { width: 4px; height: 45%; }
+        .second-hand { width: 2px; height: 50%; background: var(--primary-color); }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .feature-box {
+            background: var(--bg-color);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .feature-box input {
+            width: 100px;
+            padding: 8px;
+            font-size: 16px;
+            text-align: center;
+            border: 2px solid var(--primary-color);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        button {
+            padding: 8px 12px;
+            font-size: 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: var(--text-color);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="clock" id="digital-clock">00:00:00</div>
+
+        <div class="analog-clock" id="analog-clock">
+            <div class="hand hour-hand" id="hour-hand"></div>
+            <div class="hand minute-hand" id="minute-hand"></div>
+            <div class="hand second-hand" id="second-hand"></div>
+        </div>
+
+        <div class="controls">
+            <button id="mode-toggle">Switch to Analog</button>
+            <button id="theme-toggle">Dark Mode</button>
+        </div>
+
+        <div class="features">
+            <div class="feature-box">
+                <label>⏰ Alarm</label>
+                <input type="time" id="alarm-time">
+                <button id="set-alarm">Set</button>
+            </div>
+
+            <div class="feature-box">
+                <label>⏳ Timer</label>
+                <input type="text" id="timer-input" placeholder="MM:SS">
+                <button id="set-timer">Start</button>
+            </div>
+
+            <div class="feature-box">
+                <span id="timer-display">00:00</span>
+            </div>
+        </div>
+    </div>
+
+    <audio id="alarm-sound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+    <script>
+        const digitalClock = document.getElementById("digital-clock");
+        const analogClock = document.getElementById("analog-clock");
+        const hourHand = document.getElementById("hour-hand");
+        const minuteHand = document.getElementById("minute-hand");
+        const secondHand = document.getElementById("second-hand");
+
+        const modeToggle = document.getElementById("mode-toggle");
+        const themeToggle = document.getElementById("theme-toggle");
+        const alarmInput = document.getElementById("alarm-time");
+        const setAlarmBtn = document.getElementById("set-alarm");
+        const timerInput = document.getElementById("timer-input");
+        const setTimerBtn = document.getElementById("set-timer");
+        const timerDisplay = document.getElementById("timer-display");
+        const alarmSound = document.getElementById("alarm-sound");
+
+        let isAnalog = false;
+        let alarmTime = null;
+        let timerTime = 0;
+        let timerInterval = null;
+
+        function updateClock() {
+            const now = new Date();
+            digitalClock.textContent = now.toLocaleTimeString();
+
+            if (isAnalog) {
+                let hours = now.getHours() % 12;
+                let minutes = now.getMinutes();
+                let seconds = now.getSeconds();
+
+                hourHand.style.transform = `rotate(${(hours * 30) + (minutes / 2)}deg)`;
+                minuteHand.style.transform = `rotate(${minutes * 6}deg)`;
+                secondHand.style.transform = `rotate(${seconds * 6}deg)`;
+            }
+
+            if (alarmTime && now.getHours() === alarmTime.getHours() && now.getMinutes() === alarmTime.getMinutes()) {
+                alarmSound.play();
+                alert("⏰ Alarm Time!");
+                alarmTime = null;
+            }
+        }
+
+        function setAlarm() {
+            const timeParts = alarmInput.value.split(":");
+            if (timeParts.length < 2) {
+                alert("Please enter a valid alarm time!");
+                return;
+            }
+            alarmTime = new Date();
+            alarmTime.setHours(parseInt(timeParts[0]), parseInt(timeParts[1]), 0);
+            alert("⏰ Alarm Set for " + alarmInput.value);
+        }
+
+        function setTimer() {
+            const timeParts = timerInput.value.split(":");
+            if (timeParts.length < 2) {
+                alert("Please enter a valid timer (MM:SS)!");
+                return;
+            }
+            timerTime = (parseInt(timeParts[0]) || 0) * 60 + (parseInt(timeParts[1]) || 0);
+
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (timerTime > 0) {
+                    timerTime--;
+                    let min = Math.floor(timerTime / 60).toString().padStart(2, "0");
+                    let sec = (timerTime % 60).toString().padStart(2, "0");
+                    timerDisplay.textContent = `${min}:${sec}`;
+                } else {
+                    clearInterval(timerInterval);
+                    alarmSound.play();
+                    alert("⏳ Timer Finished!");
+                }
+            }, 1000);
+        }
+
+        function toggleMode() {
+            isAnalog = !isAnalog;
+            modeToggle.textContent = isAnalog ? "Switch to Digital" : "Switch to Analog";
+            analogClock.style.display = isAnalog ? "block" : "none";
+            digitalClock.style.display = isAnalog ? "none" : "block";
+        }
+
+        setInterval(updateClock, 1000);
+        setAlarmBtn.addEventListener("click", setAlarm);
+        setTimerBtn.addEventListener("click", setTimer);
+        modeToggle.addEventListener("click", toggleMode);
+        themeToggle.addEventListener("click", () => document.body.classList.toggle("dark-mode"));
+    </script>
+</body>
+</html>
